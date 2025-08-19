@@ -29,6 +29,8 @@ const Transparency: React.FC = () => {
       <ul>
         <li>I do not currently have enough time in my day to build infrastructure robust enough to host this site on Banyan nodes in my spare time. The team is mostly me as of right now(August 2025). The goal is to eventually build out some infrastructure to host this site using Banyan nodes exposed to the web in the near future but I just needed this site up to get the ball rolling. I have not done thorough enough network testing and benchmarking to know how well Banyan performs as of this moment, hence being in a pre-release state. Centralized and privatized cloud services are currently the most convenient and reliable option to kick things off.</li>
       </ul>
+      <h2>That's not what banyan figs look like...</h2>
+      <ul><li>I know that. Brown turkey and black mission figs are more appealling as a logo than banyan figs. They all have that dense network of seeds though.</li></ul>
     </div>
   );
 };
