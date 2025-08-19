@@ -1,0 +1,30 @@
+version: '3.8'
+
+services:
+  banyan-webpage:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        # Replace with your actual GitHub repository (format: username/repository-name)
+        GITHUB_REPO: "cyberscoundrel/banyan-webpage"
+        # Optionally specify a different branch (defaults to 'main')
+        GITHUB_BRANCH: "main"
+    ports:
+      - "8080:80"
+    restart: unless-stopped
+    environment:
+      - NODE_ENV=production
+    
+  # Alternative service for development with local files (webpack dev server)
+  banyan-webpage-dev:
+    profiles:
+      - dev
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    ports:
+      - "3000:3000"
+    restart: unless-stopped
+    environment:
+      - NODE_ENV=development
