@@ -25,6 +25,10 @@ const Transparency: React.FC = () => {
       </ul>
       <h2>Open Source?</h2>
       <ul><li>Yes, around August of 2026.</li></ul>
+      <h2>This site is hosted on a cloud service provider...</h2>
+      <ul>
+        <li>I do not currently have enough time in my day to build infrastructure robust enough to host this site on Banyan nodes in my spare time. The team is mostly me as of right now(August 2025). The goal is to eventually build out some infrastructure to host this site using Banyan nodes exposed to the web in the near future but I just needed this site up to get the ball rolling. I have not done thorough enough network testing and benchmarking to know how well Banyan performs as of this moment, hence being in a pre-release state. Centralized and privatized cloud services are currently the most convenient and reliable option to kick things off.</li>
+      </ul>
     </div>
   );
 };
