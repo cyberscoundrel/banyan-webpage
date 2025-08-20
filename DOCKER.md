@@ -1,19 +1,19 @@
 # Docker Setup for Banyan Documentation Website
 
-This project includes Docker configuration for production deployment with nginx and optional development setup.
+This project includes Docker configuration that builds the project and serves it using the `serve` package for production, with optional development setup.
 
 ## Quick Start
 
 ### Production Build with GitHub Repository
 
-The main `Dockerfile` builds your project from GitHub for production deployment:
+The main `Dockerfile` clones your project from GitHub, builds it, and serves the static files:
 
 ```bash
 # Build the Docker image (replace with your GitHub repo)
 docker build --build-arg GITHUB_REPO="your-username/your-repo-name" -t banyan-webpage .
 
 # Run the container
-docker run -p 8080:80 banyan-webpage
+docker run -p 3000:3000 banyan-webpage
 ```
 
 ### Using Docker Compose
@@ -26,7 +26,7 @@ The easiest way to get started is with docker-compose:
 docker-compose up --build
 ```
 
-Visit `http://localhost:8080` to see your documentation site.
+Visit `http://localhost:3000` to see your documentation site.
 
 ## Configuration Options
 
@@ -51,19 +51,19 @@ docker build \
 ## Development vs Production
 
 ### Production Mode (Default)
-The main `Dockerfile` and `Dockerfile.local` build optimized production bundles:
+The main `Dockerfile` and `Dockerfile.local` build the project and serve static files with the `serve` package:
 
 ```bash
 # Production build with local files
 docker build -f Dockerfile.local -t banyan-webpage-local .
-docker run -p 8080:80 banyan-webpage-local
+docker run -p 3000:3000 banyan-webpage-local
 ```
 
 ### Development Mode  
 For active development with hot reload, use the development Dockerfile:
 
 ```bash
-# Development with webpack dev server
+# Development with webpack serve in development mode
 docker build -f Dockerfile.dev -t banyan-webpage-dev .
 docker run -p 3000:3000 banyan-webpage-dev
 
@@ -71,17 +71,15 @@ docker run -p 3000:3000 banyan-webpage-dev
 docker-compose --profile dev up --build
 ```
 
-## Production Features
+## Serve Package Features
 
 The production Docker setup provides:
 
-- Multi-stage builds for minimal image size
-- Nginx serving optimized static files
-- Proper SPA routing configuration
-- Security headers
-- Gzip compression
-- Static asset caching (1 year)
-- Production webpack optimizations
+- `npm run build` creates optimized production bundle
+- `serve` package serves static files efficiently
+- SPA routing support with `-s` flag
+- Lightweight static file server
+- Fast startup and minimal resource usage
 
 ### Environment Variables
 
@@ -100,7 +98,7 @@ services:
   banyan-webpage:
     # ... other configuration
     healthcheck:
-      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost/"]
+      test: ["CMD", "wget", "--quiet", "--tries=1", "--spider", "http://localhost:3000/"]
       interval: 30s
       timeout: 10s
       retries: 3
@@ -109,9 +107,9 @@ services:
 
 ## File Structure
 
-- `Dockerfile` - Production build with GitHub repository cloning
-- `Dockerfile.local` - Production build with local files  
-- `Dockerfile.dev` - Development build with webpack dev server
+- `Dockerfile` - Production build + serve package with GitHub repository cloning
+- `Dockerfile.local` - Production build + serve package with local files  
+- `Dockerfile.dev` - Webpack serve in development mode with hot reload
 - `docker-compose.yml` - Docker Compose configuration with production and dev profiles
 - `.dockerignore` - Files to exclude from Docker build context
 
@@ -124,8 +122,7 @@ services:
    - Check if the repository is public or if you need authentication
 
 2. **Port already in use**
-   - For production: Change the port mapping: `-p 8081:80` instead of `-p 8080:80`
-   - For development: Change the port mapping: `-p 3001:3000` instead of `-p 3000:3000`
+   - Change the port mapping: `-p 3001:3000` instead of `-p 3000:3000`
 
 3. **Build context too large**
    - Ensure `.dockerignore` is properly configured
@@ -140,7 +137,7 @@ docker build --no-cache --progress=plain --build-arg GITHUB_REPO="username/repo"
 # Run with interactive shell for debugging
 docker run -it --entrypoint /bin/sh banyan-webpage
 
-# Check container logs (nginx for production, webpack for dev)
+# Check serve package logs
 docker logs <container-id>
 ```
 
@@ -160,16 +157,16 @@ RUN git clone https://${GITHUB_TOKEN}@github.com/${GITHUB_REPO}.git .
 
 ## Optimization Features
 
-### Production Optimizations:
-- Multi-stage builds minimize final image size (~15-25MB)
+### Production Mode:
+- Production webpack build (minification, tree-shaking)
+- `serve` package for efficient static file serving
 - Layer caching for npm dependencies
 - Minimal Alpine Linux base images
-- Nginx with gzip compression and caching
-- Production webpack optimizations (minification, tree-shaking)
-- Security headers
+- SPA routing support
+- Lightweight and fast serving
 
-### Development Features:
-- Webpack dev server with hot module replacement
-- Fast development builds
-- Source maps enabled for debugging
+### Development Mode:
+- Webpack serve with hot module replacement
+- Fast development builds with source maps
 - Live reloading on file changes
+- Development-optimized builds

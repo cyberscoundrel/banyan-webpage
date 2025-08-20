@@ -1,4 +1,4 @@
-# Development Dockerfile using webpack dev server
+# Development Dockerfile using webpack serve in development mode
 FROM node:18-alpine
 
 # Set working directory
@@ -13,8 +13,8 @@ RUN npm ci
 # Copy source code
 COPY . .
 
-# Expose webpack dev server port
+# Expose webpack serve port
 EXPOSE 3000
 
-# Start webpack dev server with host binding for Docker
-CMD ["npm", "run", "dev", "--", "--host", "0.0.0.0"]
+# Start webpack serve in development mode with host binding for Docker
+CMD ["npx", "webpack", "serve", "--mode", "development", "--host", "0.0.0.0"]
